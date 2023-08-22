@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 class HttpRequestHanlder {
   static final String _base = HttpUrls.baseUrl;
 
-  static Future<Map<String, dynamic>> get(
+  static Future<(Map<String, dynamic>? data, String? errorMessage)> get(
     String path, {
     Map<String, dynamic>? parameters,
     bool hasApi = true,
@@ -21,13 +21,13 @@ class HttpRequestHanlder {
         options: options,
       );
 
-      return response.data;
+      return (response.data as Map<String, dynamic>, null);
     } on DioException catch (error) {
-      throw error.message!;
+      return (null, error.message!);
     }
   }
 
-  static Future<Map<String, dynamic>> post(
+  static Future<(Map<String, dynamic>? data, String? errorMessage)> post(
     String path, {
     Map<String, dynamic>? parameters,
     bool hasApi = true,
@@ -43,13 +43,13 @@ class HttpRequestHanlder {
         options: options,
       );
 
-      return response.data;
+      return (response.data as Map<String, dynamic>, null);
     } on DioException catch (error) {
-      throw error.message!;
+      return (null, error.message!);
     }
   }
 
-  static Future<Map<String, dynamic>> put(
+  static Future<(Map<String, dynamic>? data, String? errorMessage)> put(
     String path, {
     Map<String, dynamic>? parameters,
     bool hasApi = true,
@@ -65,13 +65,13 @@ class HttpRequestHanlder {
         options: options,
       );
 
-      return response.data;
+      return (response.data as Map<String, dynamic>, null);
     } on DioException catch (error) {
-      throw error.message!;
+      return (null, error.message!);
     }
   }
 
-  static Future<Map<String, dynamic>> patch(
+  static Future<(Map<String, dynamic>? data, String? errorMessage)> patch(
     String path, {
     Map<String, dynamic>? parameters,
     bool hasApi = true,
@@ -87,13 +87,13 @@ class HttpRequestHanlder {
         options: options,
       );
 
-      return response.data;
+      return (response.data as Map<String, dynamic>, null);
     } on DioException catch (error) {
-      throw error.message!;
+      return (null, error.message!);
     }
   }
 
-  static Future<Map<String, dynamic>> delete(
+  static Future<(Map<String, dynamic>? data, String? errorMessage)> delete(
     String path, {
     Map<String, dynamic>? parameters,
     bool hasApi = true,
@@ -109,9 +109,9 @@ class HttpRequestHanlder {
         options: options,
       );
 
-      return response.data;
+      return (response.data as Map<String, dynamic>, null);
     } on DioException catch (error) {
-      throw error.message!;
+      return (null, error.message!);
     }
   }
 
@@ -120,7 +120,7 @@ class HttpRequestHanlder {
     if (hasHeader) {
       if (hasApi) {
         return {
-          'api-key': AppGlobal.appApiKey,
+          'x-apikey': AppGlobal.appApiKey,
           'Content-Type': 'application/json; charset=UTF-8',
         };
       } else {

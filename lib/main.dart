@@ -1,3 +1,4 @@
+import 'package:contact/config/styles/app_theme.dart';
 import 'package:contact/core/dependency/locator.dart';
 import 'package:contact/core/global/app_global.dart';
 import 'package:contact/core/localStorage/local_storage.dart';
@@ -27,10 +28,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: AppRouter.routers,
       onGenerateRoute: AppRouter.generateRoute,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme:
+          ThemeData(useMaterial3: true, colorScheme: AppTheme.lightColorScheme),
+      darkTheme:
+          ThemeData(useMaterial3: true, colorScheme: AppTheme.darkColorScheme),
       initialRoute: RouterKey.splash,
     );
   }

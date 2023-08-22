@@ -16,7 +16,7 @@ class AppRouter {
     RouterKey.splash: (context) => const SplashPage(),
     RouterKey.addContact: (context) => const AddContactPage(),
     RouterKey.editContact: (context) => const EditContantPage(),
-    RouterKey.contactDetails: (context) => const ContactDetialsPage(),
+    RouterKey.contactDetails: (context) => const ContactDetailsPage(),
     RouterKey.auth: (context) => const AuthPage(),
   };
 
@@ -44,7 +44,7 @@ class AppRouter {
         );
       case RouterKey.contactDetails:
         return MaterialPageRoute(
-          builder: (_) => const ContactDetialsPage(),
+          builder: (_) => const ContactDetailsPage(),
           settings: settings,
         );
       case RouterKey.auth:
@@ -67,16 +67,16 @@ class AppRouter {
     });
   }
 
-  static ScreenArguments<T> getArgument<T>(BuildContext context) {
-    ScreenArguments<T> argument =
-        ModalRoute.of(context)!.settings.arguments is ScreenArguments<T>
-            ? (ModalRoute.of(context)!.settings.arguments as ScreenArguments<T>)
-            : ScreenArguments<T>();
+  static ScreenArguments getArgument(BuildContext context) {
+    ScreenArguments argument =
+        ModalRoute.of(context)!.settings.arguments is ScreenArguments
+            ? (ModalRoute.of(context)!.settings.arguments as ScreenArguments)
+            : ScreenArguments();
     return argument;
   }
 
   static void pop<T extends Object?>({
-    T? argument,
+    dynamic argument,
     bool rootNavigator = false,
   }) {
     if (rootNavigator) {
@@ -96,7 +96,7 @@ class AppRouter {
 
   static Future<T?> push<T extends Object?>(
     String? pageName, {
-    T? argument,
+    dynamic argument,
   }) async {
     return await Navigator.pushNamed(
       AppGlobal.navKey.currentState!.context,
@@ -109,7 +109,7 @@ class AppRouter {
 
   static Future<T?> pushReplacement<T extends Object?>(
     String? pageName, {
-    T? argument,
+    dynamic argument,
   }) async {
     return await Navigator.pushReplacementNamed(
         AppGlobal.navKey.currentState!.context, pageName!,
@@ -118,7 +118,7 @@ class AppRouter {
 
   static Future<T?> popAndPush<T extends Object?>(
     String? pageName, {
-    T? argument,
+    dynamic argument,
   }) async {
     return await Navigator.popAndPushNamed(
         AppGlobal.navKey.currentState!.context, pageName!,
