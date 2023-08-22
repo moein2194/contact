@@ -1,5 +1,9 @@
 import 'package:contact/core/global/app_global.dart';
 import 'package:contact/core/router/screen_arguments.dart';
+import 'package:contact/features/auth/presentation/pages/auth_page.dart';
+import 'package:contact/features/contact/presentation/pages/add_contact_page.dart';
+import 'package:contact/features/contact/presentation/pages/contact_details_page.dart';
+import 'package:contact/features/contact/presentation/pages/edit_contact_page.dart';
 import 'package:contact/features/home/presentation/pages/home_page.dart';
 import 'package:contact/features/splash/presentation/pages/splash_page.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +14,10 @@ class AppRouter {
   static Map<String, Widget Function(BuildContext)> routers = {
     RouterKey.home: (context) => const HomePage(),
     RouterKey.splash: (context) => const SplashPage(),
+    RouterKey.addContact: (context) => const AddContactPage(),
+    RouterKey.editContact: (context) => const EditContantPage(),
+    RouterKey.contactDetails: (context) => const ContactDetialsPage(),
+    RouterKey.auth: (context) => const AuthPage(),
   };
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -22,6 +30,26 @@ class AppRouter {
       case RouterKey.splash:
         return MaterialPageRoute(
           builder: (_) => const SplashPage(),
+          settings: settings,
+        );
+      case RouterKey.addContact:
+        return MaterialPageRoute(
+          builder: (_) => const AddContactPage(),
+          settings: settings,
+        );
+      case RouterKey.editContact:
+        return MaterialPageRoute(
+          builder: (_) => const EditContantPage(),
+          settings: settings,
+        );
+      case RouterKey.contactDetails:
+        return MaterialPageRoute(
+          builder: (_) => const ContactDetialsPage(),
+          settings: settings,
+        );
+      case RouterKey.auth:
+        return MaterialPageRoute(
+          builder: (_) => const AuthPage(),
           settings: settings,
         );
       default:
@@ -113,4 +141,8 @@ class AppRouter {
 class RouterKey {
   static const String home = "/home";
   static const String splash = "/splash";
+  static const String contactDetails = "/contact_details";
+  static const String editContact = "/edit_contact";
+  static const String addContact = "/add_contact";
+  static const String auth = "/auth";
 }

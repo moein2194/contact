@@ -1,4 +1,5 @@
 import 'package:contact/core/dependency/locator.dart';
+import 'package:contact/core/global/app_global.dart';
 import 'package:contact/core/localStorage/local_storage.dart';
 import 'package:contact/core/router/app_router.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'STDev Contact',
+      navigatorKey: AppGlobal.navKey,
       debugShowCheckedModeBanner: false,
       routes: AppRouter.routers,
       onGenerateRoute: AppRouter.generateRoute,
