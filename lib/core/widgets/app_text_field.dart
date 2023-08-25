@@ -4,8 +4,9 @@ class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final IconData? prefixIcon;
   final TextInputType? keyboardType;
-  final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry margin;
   final String? hintText;
+  final String? Function(String? value)? validator;
   const AppTextField({
     super.key,
     required this.controller,
@@ -13,45 +14,49 @@ class AppTextField extends StatelessWidget {
     this.keyboardType,
     this.margin = const EdgeInsets.symmetric(horizontal: 8),
     this.hintText,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
+    double borderRadius = 20;
     ThemeData theme = Theme.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.background,
-        borderRadius: BorderRadius.circular(32),
+
+    InputBorder border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(borderRadius),
+      borderSide: BorderSide(
+        color: theme.colorScheme.primary.withOpacity(0.2),
       ),
-      margin: margin,
+    );
+
+    return Padding(
+      padding: margin,
       child: TextFormField(
-        key: key,
         controller: controller,
         keyboardType: keyboardType,
         maxLines: keyboardType == TextInputType.multiline ? 3 : 1,
         maxLength: keyboardType == TextInputType.multiline ? 200 : null,
+        validator: validator,
         decoration: InputDecoration(
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(32),
-            borderSide: BorderSide.none,
-          ),
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+          border: border,
+          enabledBorder: border,
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(32),
+            borderRadius: BorderRadius.circular(borderRadius),
             borderSide: BorderSide(
               color: theme.colorScheme.primary,
               width: 1,
             ),
           ),
-          fillColor: theme.colorScheme.background,
-          focusColor: theme.colorScheme.background,
-          hoverColor: theme.colorScheme.background,
-          prefixIcon: Icon(prefixIcon),
+          fillColor: theme.colorScheme.onTertiary,
+          focusColor: theme.colorScheme.onTertiary,
+          hoverColor: theme.colorScheme.onTertiary,
+          prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
           prefixIconColor: theme.colorScheme.primaryContainer,
           hintText: hintText,
           hintStyle: theme.textTheme.bodyMedium!.apply(
-            color: theme.colorScheme.primaryContainer,
+            color: theme.colorScheme.tertiary,
           ),
         ),
         cursorWidth: 1.5,

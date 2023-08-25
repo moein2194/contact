@@ -1,9 +1,23 @@
 part of 'contact_bloc.dart';
 
-abstract class ContactState extends Equatable {
-  const ContactState();  
+class ContactState extends Equatable {
+  final EventStatus<ContactEntity> createNewContactStatus;
+
+  const ContactState({
+    required this.createNewContactStatus,
+  });
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [
+        createNewContactStatus,
+      ];
+
+  ContactState copyWith({
+    EventStatus<ContactEntity>? newCreateNewContactStatus,
+  }) {
+    return ContactState(
+      createNewContactStatus:
+          newCreateNewContactStatus ?? createNewContactStatus,
+    );
+  }
 }
-class ContactInitial extends ContactState {}

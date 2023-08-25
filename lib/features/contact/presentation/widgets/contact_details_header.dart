@@ -1,6 +1,5 @@
 import 'package:contact/config/assets/images.dart';
 import 'package:contact/config/enums.dart';
-import 'package:contact/core/network/app_url_launcher.dart';
 import 'package:contact/features/contact/domain/entities/contact_entity.dart';
 import 'package:contact/features/contact/presentation/widgets/conversation_icon_button.dart';
 import 'package:flutter/material.dart';
@@ -88,8 +87,6 @@ class ContactDetailsHeader extends StatelessWidget {
                                 ConversationIconButton(
                                   conversationType: ConversationType.email,
                                   onPressed: () {
-                                    AppUrlLauncher.mailUrl(
-                                        email: contact.email!);
                                   },
                                 ),
                                 SizedBox(
@@ -104,8 +101,6 @@ class ContactDetailsHeader extends StatelessWidget {
                                 ConversationIconButton(
                                   conversationType: ConversationType.message,
                                   onPressed: () {
-                                    AppUrlLauncher.smsUrl(
-                                        phoneNumber: contact.phone!);
                                   },
                                 ),
                                 SizedBox(
@@ -114,7 +109,7 @@ class ContactDetailsHeader extends StatelessWidget {
                                 ConversationIconButton(
                                   conversationType: ConversationType.call,
                                   onPressed: () {
-                                    AppUrlLauncher.telUrl(tel: contact.phone!);
+
                                   },
                                 ),
                               ],

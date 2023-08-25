@@ -1,10 +1,11 @@
 import 'package:contact/core/models/event_status.dart';
 import 'package:flutter/material.dart';
 
-class EventStatusLayout extends StatelessWidget {
+class EventStatusLayout<T> extends StatelessWidget {
   final EventStatus status;
   final Widget onErrorStatus;
-  final Widget Function(BuildContext context, dynamic data) onCompletedStatus;
+  final void Function(String error)? onErrorListener;
+  final Widget Function(BuildContext context, T? data) onCompletedStatus;
   final Widget onInitialStatus;
   final Widget onLoadingStatus;
   const EventStatusLayout({
@@ -14,14 +15,22 @@ class EventStatusLayout extends StatelessWidget {
     required this.onErrorStatus,
     required this.onInitialStatus,
     required this.onLoadingStatus,
+    this.onErrorListener,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (status is EventError) {
+      if (onErrorListener != null) {
+        String message = (status as EventError).message;
+        onErrorListener!(message);
+      }
+    }
     if (status is EventCompleted) {
       return StreamBuilder(
-        builder: (context, snapshot) {
-          dynamic data;
+        stream: Stream.value(status),
+        builder: (context, snapShot) {
+          T data;
           data = (status as EventCompleted).data;
 
           return onCompletedStatus(context, data);

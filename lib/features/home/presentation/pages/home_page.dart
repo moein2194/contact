@@ -1,7 +1,14 @@
+import 'package:contact/core/router/app_router.dart';
 import 'package:contact/core/widgets/app_text_field.dart';
+import 'package:contact/core/widgets/default_loading.dart';
+import 'package:contact/core/widgets/event_status_layout.dart';
 import 'package:contact/features/contact/data/models/contact_model.dart';
+import 'package:contact/features/contact/domain/entities/contact_entity.dart';
+import 'package:contact/features/home/presentation/bloc/home_bloc.dart';
 import 'package:contact/features/home/presentation/widgets/contact_card.dart';
+import 'package:contact/features/home/presentation/widgets/error_contacts_listing_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +19,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    getAllContacts();
+    super.initState();
+  }
+
+  void getAllContacts() {
+    BlocProvider.of<HomeBloc>(context).add(GetAllContactsEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,26 +84,49 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         backgroundColor: theme.colorScheme.onSecondary,
-        body: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return ContactCard(
-              contact: ContactModel(
-                firstName: "Moein",
-                lastName: "Moradi",
-                phone: "+989135961052",
-                email: "flyman812@gmail.com",
-                picture: [
-                  "https://picsum.photos/200",
-                ],
-                notes:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        body: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            return EventStatusLayout<List<ContactEntity>>(
+              status: state.contactsListStatus,
+              onCompletedStatus: (context, data) {
+                return ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: data!.length,
+                  itemBuilder: (context, index) {
+                    ContactEntity contact = data[index];
+                    return ContactCard(
+                      contact: ContactModel(
+                        firstName: contact.firstName,
+                        lastName: contact.lastName,
+                        phone: contact.phone,
+                        email: contact.email,
+                        picture: contact.picture,
+                        notes: contact.notes,
+                      ),
+                    );
+                  },
+                );
+              },
+              onErrorStatus: Center(
+                child: ErrorCotactsListingLayout(
+                  onPressedTryAgain: () {
+                    getAllContacts();
+                  },
+                ),
+              ),
+              onInitialStatus: const SizedBox(),
+              onLoadingStatus: const Center(
+                child: DefaultLoading(),
               ),
             );
           },
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            AppRouter.push(
+              RouterKey.addContact,
+            );
+          },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50),
           ),

@@ -1,5 +1,4 @@
 import 'package:contact/config/assets/images.dart';
-import 'package:contact/core/network/app_url_launcher.dart';
 import 'package:contact/core/router/app_router.dart';
 import 'package:contact/features/contact/domain/entities/contact_entity.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +98,7 @@ class ContactCard extends StatelessWidget {
             const Spacer(),
             contact.phone != null
                 ? GestureDetector(
-                    onTap: () => AppUrlLauncher.telUrl(tel: contact.phone!),
+                    
                     child: Container(
                       width: 35,
                       height: 35,

@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 class HttpRequestHanlder {
   static final String _base = HttpUrls.baseUrl;
 
-  static Future<(Map<String, dynamic>? data, String? errorMessage)> get(
+  static Future<(dynamic data, String? errorMessage)> get(
     String path, {
     Map<String, dynamic>? parameters,
     bool hasApi = true,
@@ -21,7 +21,7 @@ class HttpRequestHanlder {
         options: options,
       );
 
-      return (response.data as Map<String, dynamic>, null);
+      return (response.data, null);
     } on DioException catch (error) {
       return (null, error.message!);
     }
@@ -30,6 +30,7 @@ class HttpRequestHanlder {
   static Future<(Map<String, dynamic>? data, String? errorMessage)> post(
     String path, {
     Map<String, dynamic>? parameters,
+    FormData? data,
     bool hasApi = true,
   }) async {
     try {
@@ -120,7 +121,7 @@ class HttpRequestHanlder {
     if (hasHeader) {
       if (hasApi) {
         return {
-          'x-apikey': AppGlobal.appApiKey,
+          'x-api-key': AppGlobal.appApiKey,
           'Content-Type': 'application/json; charset=UTF-8',
         };
       } else {

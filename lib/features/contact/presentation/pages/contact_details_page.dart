@@ -12,78 +12,86 @@ class ContactDetailsPage extends StatefulWidget {
 }
 
 class _ContactDetailsPageState extends State<ContactDetailsPage> {
-  static ContactEntity? contact;
+  ContactEntity? contact;
 
   @override
   void initState() {
+    Future.delayed(
+      Duration.zero,
+      () {
+        var args = AppRouter.getArgument(context).data;
+        if (args != null && contact == null) {
+          contact = args;
+          setState(() {});
+        }
+      },
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var args = AppRouter.getArgument(context).data;
-    if (args != null && contact == null) {
-      contact = args;
-    }
     ThemeData theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            AppRouter.pop();
-          },
-          icon: Icon(
-            Icons.arrow_back_ios_rounded,
-            color: theme.colorScheme.tertiary,
-            size: 20,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              "edit",
-              style: theme.textTheme.bodyLarge!.apply(
-                color: theme.colorScheme.tertiary,
+    return contact == null
+        ? const SizedBox()
+        : Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                onPressed: () {
+                  AppRouter.pop();
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: theme.colorScheme.tertiary,
+                  size: 20,
+                ),
               ),
+              actions: [
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "edit",
+                    style: theme.textTheme.bodyLarge!.apply(
+                      color: theme.colorScheme.tertiary,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-      body: SizedBox(
-        width: double.maxFinite,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ContactDetailsHeader(
-              contact: contact!,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: ListView(
-                shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
+            body: SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ContactParam(
-                    title: "Phone number",
-                    details: contact!.phone,
+                  ContactDetailsHeader(
+                    contact: contact!,
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  ContactParam(
-                    title: "Note",
-                    details: contact!.notes,
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: ListView(
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                        ContactParam(
+                          title: "Phone number",
+                          details: contact!.phone,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        ContactParam(
+                          title: "Note",
+                          details: contact!.notes,
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),
-            )
-          ],
-        ),
-      ),
-    );
+            ),
+          );
   }
 }
