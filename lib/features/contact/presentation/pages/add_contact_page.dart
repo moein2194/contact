@@ -1,10 +1,15 @@
 import 'dart:io';
 
+import 'package:contact/config/extensions.dart';
+import 'package:contact/core/models/event_status.dart';
 import 'package:contact/core/router/app_router.dart';
 import 'package:contact/core/router/screen_arguments.dart';
 import 'package:contact/core/widgets/app_text_field.dart';
+import 'package:contact/features/contact/presentation/bloc/contact_bloc.dart';
 import 'package:contact/features/contact/presentation/widgets/image_picker_dialog.dart';
+import 'package:contact/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddContactPage extends StatefulWidget {
   const AddContactPage({super.key});
@@ -141,7 +146,7 @@ class _AddContactPageState extends State<AddContactPage> {
                                 horizontal: 12, vertical: 8),
                             hintText: "phone number",
                             keyboardType: TextInputType.phone,
-                            validator: (value) => validateMobile(value),
+                            validator: (value) => value!.validateMobile,
                           ),
                           AppTextField(
                             controller: emailController,
@@ -149,7 +154,7 @@ class _AddContactPageState extends State<AddContactPage> {
                                 horizontal: 12, vertical: 8),
                             hintText: "email",
                             keyboardType: TextInputType.emailAddress,
-                            validator: (value) => validateEmail(value),
+                            validator: (value) => value!.validateEmail,
                           ),
                           AppTextField(
                             controller: noteController,
@@ -164,34 +169,82 @@ class _AddContactPageState extends State<AddContactPage> {
                               return null;
                             },
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
+                          BlocConsumer<ContactBloc, ContactState>(
+                            listener: (context, state) {
+                              if (state.createNewContactStatus
+                                  is EventCompleted) {
+                                BlocProvider.of<HomeBloc>(context).add(
+                                    AddNewContactToListEvent(
+                                        newContact:
+                                            (state.createNewContactStatus
+                                                    as EventCompleted)
+                                                .data));
+                                AppRouter.pop();
+                              }
+                              if (state.createNewContactStatus is EventError) {
                                 AppRouter.pop();
                               }
                             },
-                            style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                backgroundColor: theme.colorScheme.primary,
-                                foregroundColor: theme.colorScheme.onPrimary,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 32)),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add_rounded,
-                                ),
-                                Text(
-                                  "save",
-                                ),
-                              ],
-                            ),
+                            listenWhen: (previous, current) => previous.createNewContactStatus != current.createNewContactStatus,
+                            buildWhen: (previous, current) => previous.createNewContactStatus != current.createNewContactStatus,
+                            builder: (context, state) {
+                              return ElevatedButton(
+                                onPressed: state.createNewContactStatus
+                                        is EventLoading
+                                    ? null
+                                    : () {
+                                        if (_formKey.currentState!.validate()) {
+                                          BlocProvider.of<ContactBloc>(context)
+                                              .add(
+                                            CreateContactEvent(
+                                              firstName:
+                                                  firstNameController.text,
+                                              lastName: lastNameController.text,
+                                              email: emailController.text,
+                                              phone: phoneController.text,
+                                              note: noteController.text,
+                                              picture: pickedImage,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    backgroundColor: theme.colorScheme.primary,
+                                    foregroundColor:
+                                        theme.colorScheme.onPrimary,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 32)),
+                                child: state.createNewContactStatus
+                                        is EventLoading
+                                    ? SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          color: theme.colorScheme.background,
+                                          strokeWidth: 1.5,
+                                        ),
+                                      )
+                                    : const Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.add_rounded,
+                                          ),
+                                          Text(
+                                            "save",
+                                          ),
+                                        ],
+                                      ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -209,26 +262,4 @@ class _AddContactPageState extends State<AddContactPage> {
     );
   }
 
-  String? validateEmail(String? value) {
-    String pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = RegExp(pattern);
-    if (value == null || value.isEmpty) {
-      return "Please enter email";
-    } else if (!regex.hasMatch(value)) {
-      return 'Enter Valid Email';
-    }
-    return null;
-  }
-
-  String? validateMobile(String? value) {
-    String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-    RegExp regExp = RegExp(patttern);
-    if (value == null || value.isEmpty) {
-      return 'Please enter mobile number';
-    } else if (!regExp.hasMatch(value)) {
-      return 'Please enter valid mobile number';
-    }
-    return null;
-  }
 }

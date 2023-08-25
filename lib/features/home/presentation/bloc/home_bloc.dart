@@ -32,5 +32,41 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             state.copyWith(newContactsListStatus: EventError(result.error!)));
       }
     });
+    on<AddNewContactToListEvent>((event, emit) {
+      List<ContactEntity> contacts = List.empty();
+      if (state.contactsListStatus is EventCompleted) {
+        contacts = (state.contactsListStatus as EventCompleted).data;
+      }
+      contacts.add(event.newContact);
+      return emit(state.copyWith(
+        newContactsListStatus: EventCompleted(contacts),
+      ));
+    });
+    on<RemoveContactFromList>((event, emit) {
+      List<ContactEntity> contacts = List.empty();
+      if (state.contactsListStatus is EventCompleted) {
+        contacts = (state.contactsListStatus as EventCompleted).data;
+      }
+      contacts.removeWhere(
+        (element) => element.id == event.id,
+      );
+      return emit(state.copyWith(
+        newContactsListStatus: EventCompleted(contacts),
+      ));
+    });
+
+    on<UpdateContactFromListEvent>((event, emit) {
+      List<ContactEntity> contacts = List.empty();
+      if (state.contactsListStatus is EventCompleted) {
+        contacts = (state.contactsListStatus as EventCompleted).data;
+      }
+      contacts.removeWhere(
+        (element) => element.id == event.contact.id,
+      );
+      contacts.add(event.contact);
+      return emit(state.copyWith(
+        newContactsListStatus: EventCompleted(contacts),
+      ));
+    });
   }
 }

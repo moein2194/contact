@@ -12,4 +12,16 @@ abstract class ContactRepository {
     required String note,
     File? picture,
   });
+
+  Future<DataState<bool>> deleteContact({required String contactId});
+
+    Future<DataState<ContactEntity>> updateContact({
+      required String contactId,
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String phone,
+    required String note,
+    File? picture,
+  });
 }

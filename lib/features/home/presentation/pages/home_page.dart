@@ -2,7 +2,6 @@ import 'package:contact/core/router/app_router.dart';
 import 'package:contact/core/widgets/app_text_field.dart';
 import 'package:contact/core/widgets/default_loading.dart';
 import 'package:contact/core/widgets/event_status_layout.dart';
-import 'package:contact/features/contact/data/models/contact_model.dart';
 import 'package:contact/features/contact/domain/entities/contact_entity.dart';
 import 'package:contact/features/home/presentation/bloc/home_bloc.dart';
 import 'package:contact/features/home/presentation/widgets/contact_card.dart';
@@ -95,14 +94,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     ContactEntity contact = data[index];
                     return ContactCard(
-                      contact: ContactModel(
-                        firstName: contact.firstName,
-                        lastName: contact.lastName,
-                        phone: contact.phone,
-                        email: contact.email,
-                        picture: contact.picture,
-                        notes: contact.notes,
-                      ),
+                      contact: contact,
                     );
                   },
                 );

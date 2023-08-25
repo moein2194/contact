@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 
 class ContactDetailsHeader extends StatelessWidget {
   final ContactEntity contact;
+  final VoidCallback? onPressedEdit;
   const ContactDetailsHeader({
     super.key,
     required this.contact,
+    this.onPressedEdit,
   });
 
   @override
@@ -17,7 +19,7 @@ class ContactDetailsHeader extends StatelessWidget {
     double width = MediaQuery.sizeOf(context).width;
     return Container(
       width: double.maxFinite,
-      height: width * 0.65,
+      height: width * 0.75,
       margin: const EdgeInsets.all(12),
       child: Stack(
         fit: StackFit.loose,
@@ -86,8 +88,7 @@ class ContactDetailsHeader extends StatelessWidget {
                               children: [
                                 ConversationIconButton(
                                   conversationType: ConversationType.email,
-                                  onPressed: () {
-                                  },
+                                  onPressed: () {},
                                 ),
                                 SizedBox(
                                   width: width / 8,
@@ -100,17 +101,14 @@ class ContactDetailsHeader extends StatelessWidget {
                               children: [
                                 ConversationIconButton(
                                   conversationType: ConversationType.message,
-                                  onPressed: () {
-                                  },
+                                  onPressed: () {},
                                 ),
                                 SizedBox(
                                   width: width / 8,
                                 ),
                                 ConversationIconButton(
                                   conversationType: ConversationType.call,
-                                  onPressed: () {
-
-                                  },
+                                  onPressed: () {},
                                 ),
                               ],
                             )
@@ -119,6 +117,23 @@ class ContactDetailsHeader extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 55,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: onPressedEdit,
+                  icon: Icon(
+                    Icons.edit,
+                    color: theme.colorScheme.tertiary,
+                  ),
+                ),
+              ],
             ),
           ),
           Align(

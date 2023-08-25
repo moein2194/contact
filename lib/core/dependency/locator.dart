@@ -4,6 +4,8 @@ import 'package:contact/features/contact/data/datasources/contact_api_provider.d
 import 'package:contact/features/contact/data/repositories/contact_repository_lmpl.dart';
 import 'package:contact/features/contact/domain/repositories/contact_repository.dart';
 import 'package:contact/features/contact/domain/usecases/create_new_contact_usecase.dart';
+import 'package:contact/features/contact/domain/usecases/delete_contact_usecase.dart';
+import 'package:contact/features/contact/domain/usecases/update_contact_usecase.dart';
 import 'package:contact/features/contact/presentation/bloc/contact_bloc.dart';
 import 'package:contact/features/home/data/datasources/home_api_provider.dart';
 import 'package:contact/features/home/data/repositories/home_repository_lmpl.dart';
@@ -35,6 +37,10 @@ setup() {
       GetAllContactsUsecase(locator()));
   locator.registerSingleton<CreateNewContactUsecase>(
       CreateNewContactUsecase(repository: locator()));
+  locator.registerSingleton<DeleteContactUsecase>(
+      DeleteContactUsecase(repository: locator()));
+  locator.registerSingleton<UpdateContactUsecase>(
+      UpdateContactUsecase(repository: locator()));
 
   /// state management
   locator.registerSingleton<HomeBloc>(
@@ -45,6 +51,8 @@ setup() {
   locator.registerSingleton<ContactBloc>(
     ContactBloc(
       newContactUsecase: locator(),
+      deleteContactUsecase: locator(),
+      updateContactUsecase: locator(),
     ),
   );
 }

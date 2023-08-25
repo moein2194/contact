@@ -94,7 +94,7 @@ class AppRouter {
     }
   }
 
-  static Future<T?> push<T extends Object?>(
+  static Future<T?> push<T>(
     String? pageName, {
     dynamic argument,
   }) async {

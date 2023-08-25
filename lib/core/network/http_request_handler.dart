@@ -41,6 +41,7 @@ class HttpRequestHanlder {
       final response = await Dio().post(
         _base + path,
         queryParameters: parameters ?? {},
+        data: data,
         options: options,
       );
 
@@ -53,6 +54,7 @@ class HttpRequestHanlder {
   static Future<(Map<String, dynamic>? data, String? errorMessage)> put(
     String path, {
     Map<String, dynamic>? parameters,
+    FormData? data,
     bool hasApi = true,
   }) async {
     try {
@@ -63,6 +65,7 @@ class HttpRequestHanlder {
       final response = await Dio().put(
         _base + path,
         queryParameters: parameters ?? {},
+        data: data,
         options: options,
       );
 
