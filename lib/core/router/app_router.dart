@@ -139,8 +139,8 @@ class AppRouter {
 }
 
 class RouterKey {
+  static const String splash = "/";
   static const String home = "/home";
-  static const String splash = "/splash";
   static const String contactDetails = "/contact_details";
   static const String editContact = "/edit_contact";
   static const String addContact = "/add_contact";
